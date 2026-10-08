@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanotech A-Frame Studio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        textarea { tab-size: 2; }
+        /* カスタムスクロールバー */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 h-screen flex flex-col overflow-hidden font-sans">
+
+    <!-- ヘッダー -->
+    <header class="bg-slate-800 border-b border-slate-700 px-6 py-2.5 flex items-center justify-between shrink-0 shadow-md">
+        <div class="flex items-center space-x-3">
+            <span class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">Sanotech A-Frame Studio 工業技術基礎（VR創造）</span>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <span class="text-xs text-slate-400 hidden md:inline">
+                左側にコードを入力すると、右側のプレビューにリアルタイムで反映されます
+            </span>
+            <!-- Gemini ボタン -->
+            <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer" 
+               class="flex items-center gap-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 text-white font-medium text-xs px-3.5 py-1.5 rounded-lg shadow-md hover:shadow-indigo-500/20 hover:scale-105 transition-all duration-200 group shrink-0">
+                <!-- Geminiスパークルアイコン -->
+                <svg class="w-3.5 h-3.5 fill-current text-cyan-300" viewBox="0 0 24 24">
+                    <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z"/>
+                </svg>
+                <span>Gemini で開く</span>
+                <!-- 外部リンクアイコン -->
+                <svg class="w-3 h-3 text-white/80 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                </svg>
+            </a>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ (左右分割：左にコード、右にプレビュー) -->
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 min-h-0">
+        
+        <!-- 左側：ソース入力画面 -->
+        <section class="bg-slate-800 rounded-xl border border-slate-700 flex flex-col overflow-hidden shadow-lg">
+            <div class="bg-slate-800/80 px-4 py-2.5 border-b border-slate-700 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    A-Frame ソースコード入力 (HTML)
+                </h2>
+                <!-- 操作ボタンエリア -->
+                <div class="flex items-center gap-1.5">
+                    <button onclick="pasteCode()" id="paste-btn" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded text-slate-200 transition flex items-center gap-1" title="クリップボードから貼り付け">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 022 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                        貼り付け
+                    </button>
+                    <button onclick="copyCode()" id="copy-btn" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded text-slate-200 transition flex items-center gap-1" title="ソースをコピー">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        コピー
+                    </button>
+                    <button onclick="clearCode()" class="text-xs bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 px-2.5 py-1 rounded transition flex items-center gap-1" title="全削除">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        全削除
+                    </button>
+                </div>
+            </div>
+            <div class="flex-1 relative flex">
+                <textarea id="code-input" class="w-full h-full bg-slate-950 text-cyan-300 font-mono text-sm p-4 resize-none focus:outline-none leading-relaxed" placeholder="A-FrameのHTMLコードを入力してください..."></textarea>
+            </div>
+        </section>
+
+        <!-- 右側：プレビュー画面 -->
+        <section class="bg-slate-800 rounded-xl border border-slate-700 flex flex-col overflow-hidden shadow-lg">
+            <div class="bg-slate-800/80 px-4 py-2.5 border-b border-slate-700 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    プレビュー (A-Frame 3D Scene)
+                </h2>
+                <div class="flex items-center gap-2">
+                    <!-- クリップボードにスクショをコピーするボタン -->
+                    <button onclick="takeScreenshotToClipboard()" id="screenshot-btn" class="text-xs bg-cyan-600 hover:bg-cyan-500 px-3 py-1 rounded text-white transition flex items-center gap-1.5 shadow-sm font-medium" title="クリップボードに画像をコピー">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        スクリーンショット
+                    </button>
+                    <button onclick="reloadPreview()" class="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded text-slate-200 transition">
+                        再読み込み
+                    </button>
+                </div>
+            </div>
+            <div class="flex-1 bg-black relative">
+                <iframe id="preview-frame" class="w-full h-full border-0"></iframe>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- スクリプト制御 -->
+    <script>
+        // デフォルトのA-Frameサンプルコード
+        const defaultAFrameCode = `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>A-Frame Sample</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"><\/script>
+  </head>
+  <body>
+    <a-scene>
+      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" shadow></a-box>
+      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" shadow></a-sphere>
+      <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D" shadow></a-cylinder>
+      <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4" shadow></a-plane>
+      <a-sky color="#ECECEC"></a-sky>
+    </a-scene>
+  </body>
+</html>`;
+
+        const codeInput = document.getElementById('code-input');
+        const previewFrame = document.getElementById('preview-frame');
+
+        // 初期コードのセット
+        codeInput.value = defaultAFrameCode;
+        updatePreview();
+
+        // プレビューの更新処理
+        function updatePreview() {
+            let code = codeInput.value;
+            
+            // WebGL描画バッファ保持の設定を自動追加（黒画像化を防止）
+            if (code.includes('<a-scene') && !code.includes('preserveDrawingBuffer')) {
+                code = code.replace('<a-scene', '<a-scene renderer="preserveDrawingBuffer: true"');
+            }
+
+            const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            doc.open();
+            doc.write(code);
+            doc.close();
+        }
+
+        function reloadPreview() {
+            updatePreview();
+        }
+
+        // ★ スクリーンショットをクリップボードに保存する機能 ★
+        async function takeScreenshotToClipboard() {
+            try {
+                const iframeWin = previewFrame.contentWindow;
+                const iframeDoc = previewFrame.contentDocument || iframeWin.document;
+                const scene = iframeDoc.querySelector('a-scene');
+
+                if (!scene) {
+                    alert('プレビュー画面内に <a-scene> が見つかりません。');
+                    return;
+                }
+
+                const screenshotBtn = document.getElementById('screenshot-btn');
+                const originalHTML = screenshotBtn.innerHTML;
+                
+                screenshotBtn.innerHTML = `コピー中...`;
+                screenshotBtn.classList.add('opacity-75');
+
+                const captureToClipboard = () => {
+                    let canvas = null;
+
+                    // 1. A-Frame組み込みのスクリーンショット機能で取得
+                    if (scene.components && scene.components.screenshot) {
+                        canvas = scene.components.screenshot.getCanvas('perspective');
+                    }
+                    
+                    // 2. 取得できない場合はCanvas要素を直接参照
+                    if (!canvas) {
+                        canvas = scene.querySelector('canvas');
+                    }
+
+                    if (canvas) {
+                        canvas.toBlob(async (blob) => {
+                            if (!blob) {
+                                alert('画像の生成に失敗しました。');
+                                restoreBtn();
+                                return;
+                            }
+
+                            try {
+                                // クリップボードAPIを使用して画像を書き込み
+                                const item = new ClipboardItem({ 'image/png': blob });
+                                await navigator.clipboard.write([item]);
+
+                                // ボタン表示を成功状態に更新
+                                screenshotBtn.innerHTML = `<svg class="w-3.5 h-3.5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> コピー完了！`;
+                                screenshotBtn.classList.remove('opacity-75', 'bg-cyan-600');
+                                screenshotBtn.classList.add('bg-emerald-600');
+                            } catch (err) {
+                                console.error('クリップボードのコピーエラー:', err);
+                                alert('クリップボードへの画像貼り付け権限がありませんでした。\nブラウザのアクセス許可を確認してください。');
+                            }
+
+                            setTimeout(restoreBtn, 2000);
+                        }, 'image/png');
+                    } else {
+                        alert('キャンバスが準備できていません。もう一度お試しください。');
+                        restoreBtn();
+                    }
+                };
+
+                function restoreBtn() {
+                    screenshotBtn.innerHTML = originalHTML;
+                    screenshotBtn.classList.remove('bg-emerald-600', 'opacity-75');
+                    screenshotBtn.classList.add('bg-cyan-600');
+                }
+
+                if (scene.hasLoaded) {
+                    captureToClipboard();
+                } else {
+                    scene.addEventListener('loaded', captureToClipboard, { once: true });
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert('エラーが発生しました。');
+            }
+        }
+
+        // ソース全削除
+        function clearCode() {
+            if (confirm("入力中のソースコードをすべて削除しますか？")) {
+                codeInput.value = "";
+                updatePreview();
+            }
+        }
+
+        // ソースコピー
+        function copyCode() {
+            const code = codeInput.value;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.getElementById('copy-btn');
+                const originalHTML = btn.innerHTML;
+                
+                btn.innerHTML = `<svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 完了`;
+                btn.classList.add('bg-emerald-600/20', 'text-emerald-300', 'border', 'border-emerald-500/30');
+
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('bg-emerald-600/20', 'text-emerald-300', 'border', 'border-emerald-500/30');
+                }, 2000);
+            });
+        }
+
+        // クリップボードから貼り付け
+        async function pasteCode() {
+            try {
+                const text = await navigator.clipboard.readText();
+                codeInput.value = text;
+                updatePreview();
+
+                const btn = document.getElementById('paste-btn');
+                const originalHTML = btn.innerHTML;
+
+                btn.innerHTML = `<svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 貼付完了`;
+                btn.classList.add('bg-emerald-600/20', 'text-emerald-300', 'border', 'border-emerald-500/30');
+
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('bg-emerald-600/20', 'text-emerald-300', 'border', 'border-emerald-500/30');
+                }, 2000);
+            } catch (err) {
+                alert("クリップボードからの読み取りが許可されていないか、対応していないブラウザです。エディタ上で直接 [Ctrl + V] (または [Cmd + V]) をお試しください。");
+            }
+        }
+
+        // 入力時にリアルタイムプレビュー更新（デバウンス処理付き）
+        let timeoutId;
+        codeInput.addEventListener('input', () => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(updatePreview, 300); // 0.3秒後に反映
+        });
+    </script>
+</body>
+</html>
