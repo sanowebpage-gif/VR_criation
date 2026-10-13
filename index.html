@@ -16,20 +16,19 @@
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 h-screen flex flex-col overflow-hidden font-sans">
-
     <!-- ヘッダー -->
     <header class="bg-slate-800 border-b border-slate-700 px-6 py-2.5 flex items-center justify-between shrink-0 shadow-md">
         <div class="flex items-center space-x-3">
             <span class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-indigo-400 bg-clip-text text-transparent">Sanotech A-Frame Studio 工業技術基礎（VR創造）</span>
         </div>
-        
+                
         <div class="flex items-center gap-4">
             <span class="text-xs text-slate-400 hidden md:inline">
                 左側にコードを入力すると、右側のプレビューにリアルタイムで反映されます
             </span>
             <!-- Gemini ボタン -->
-            <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer" 
-               class="flex items-center gap-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 text-white font-medium text-xs px-3.5 py-1.5 rounded-lg shadow-md hover:shadow-indigo-500/20 hover:scale-105 transition-all duration-200 group shrink-0">
+            <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer"
+                class="flex items-center gap-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 text-white font-medium text-xs px-3.5 py-1.5 rounded-lg shadow-md hover:shadow-indigo-500/20 hover:scale-105 transition-all duration-200 group shrink-0">
                 <!-- Geminiスパークルアイコン -->
                 <svg class="w-3.5 h-3.5 fill-current text-cyan-300" viewBox="0 0 24 24">
                     <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z"/>
@@ -45,7 +44,6 @@
 
     <!-- メインコンテンツ (左右分割：左にコード、右にプレビュー) -->
     <main class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 p-4 min-h-0">
-        
         <!-- 左側：ソース入力画面 -->
         <section class="bg-slate-800 rounded-xl border border-slate-700 flex flex-col overflow-hidden shadow-lg">
             <div class="bg-slate-800/80 px-4 py-2.5 border-b border-slate-700 flex items-center justify-between">
@@ -56,11 +54,11 @@
                 <!-- 操作ボタンエリア -->
                 <div class="flex items-center gap-1.5">
                     <button onclick="pasteCode()" id="paste-btn" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded text-slate-200 transition flex items-center gap-1" title="クリップボードから貼り付け">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 022 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         貼り付け
                     </button>
                     <button onclick="copyCode()" id="copy-btn" class="text-xs bg-slate-700 hover:bg-slate-600 px-2.5 py-1 rounded text-slate-200 transition flex items-center gap-1" title="ソースをコピー">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                         コピー
                     </button>
                     <button onclick="exportHtml()" id="export-btn" class="text-xs bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/30 px-2.5 py-1 rounded transition flex items-center gap-1" title="HTMLファイルとしてダウンロード">
@@ -96,7 +94,6 @@
                 <iframe id="preview-frame" class="w-full h-full border-0"></iframe>
             </div>
         </section>
-
     </main>
 
     <!-- スクリプト制御 -->
@@ -119,7 +116,6 @@
     </a-scene>
   </body>
 </html>`;
-
         const codeInput = document.getElementById('code-input');
         const previewFrame = document.getElementById('preview-frame');
 
@@ -127,19 +123,17 @@
         codeInput.value = defaultAFrameCode;
         updatePreview();
 
-        // プレビューの更新処理
+        // プレビューの更新処理（srcdoc方式に改善してカスタムコンポーネント完全対応）
         function updatePreview() {
             let code = codeInput.value;
-            
+                        
             // WebGL描画バッファ保持の設定を自動追加（黒画像化を防止）
             if (code.includes('<a-scene') && !code.includes('preserveDrawingBuffer')) {
                 code = code.replace('<a-scene', '<a-scene renderer="preserveDrawingBuffer: true"');
             }
 
-            const doc = previewFrame.contentDocument || previewFrame.contentWindow.document;
-            doc.open();
-            doc.write(code);
-            doc.close();
+            // srcdoc を使ってiframeに安全にドキュメントをレンダリングする
+            previewFrame.srcdoc = code;
         }
 
         function reloadPreview() {
@@ -171,7 +165,7 @@
                     if (scene.components && scene.components.screenshot) {
                         canvas = scene.components.screenshot.getCanvas('perspective');
                     }
-                    
+                                        
                     // 2. 取得できない場合はCanvas要素を直接参照
                     if (!canvas) {
                         canvas = scene.querySelector('canvas');
@@ -230,7 +224,7 @@
             const code = codeInput.value;
             const blob = new Blob([code], { type: 'text/html;charset=utf-8' });
             const url = URL.createObjectURL(blob);
-            
+                        
             const a = document.createElement('a');
             a.href = url;
             a.download = 'index.html'; // 保存されるファイル名
